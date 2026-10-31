@@ -25,3 +25,5 @@ go.work.sum
 # Local build output directories (e.g., bin/ used for compiled server binaries)
 bin/
 dist/
+
+.env
