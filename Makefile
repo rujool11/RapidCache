@@ -5,7 +5,7 @@ tidy:
 
 build:
 	@mkdir -p bin
-	go build -o bin/rapidcache cmd/server/main.go
+	go build -o bin/rapidcache cmd/rapidcache/main.go
 	@echo "-->Built server binary at bin/rapidcache"
 
 run:
@@ -16,7 +16,7 @@ run:
 build_and_run: build run
 
 run_local:
-	go run cmd/server/main.go
+	go run cmd/rapidcache/main.go
 
 clean:
 	rm -rf bin/

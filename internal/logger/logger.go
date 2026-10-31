@@ -9,16 +9,14 @@ import (
 func Init(level, format string) {
 
 	var levelValue slog.Level
-	level = strings.ToLower(level)
-
 	switch level {
-	case "debug":
+	case "DEBUG":
 		levelValue = slog.LevelDebug
-	case "info":
+	case "INFO":
 		levelValue = slog.LevelInfo
-	case "warn":
+	case "WARN":
 		levelValue = slog.LevelWarn
-	case "error":
+	case "ERROR":
 		levelValue = slog.LevelError
 	default:
 		levelValue = slog.LevelInfo
