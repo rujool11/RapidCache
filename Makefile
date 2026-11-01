@@ -6,7 +6,7 @@ tidy:
 build:
 	@mkdir -p bin
 	go build -o bin/rapidcache cmd/rapidcache/main.go
-	@echo "-->Built server binary at bin/rapidcache"
+	@echo "-->Built binary at bin/rapidcache"
 
 run:
 	@echo "-->Running binary ..."

@@ -1,7 +1,13 @@
 package respserver
 
-import "fmt"
+import (
+	"context"
+	"fmt"
 
-func RunRESPServer() {
+	"github.com/rujool11/RapidCache/internal/config"
+)
+
+func Run(ctx context.Context, cfg *config.Config) error {
 	fmt.Println("Running RESP server...")
+	return nil
 }
