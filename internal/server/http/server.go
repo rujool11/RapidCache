@@ -21,7 +21,6 @@ func Run(ctx context.Context, cfg *config.Config) error {
 	// channel - communication for goroutines
 	// buffered error channel of capacity 1 (unbuffered blocks until another goroutine is ready to receive)
 	errChan := make(chan error, 1)
-	fmt.Println("Running HTTP server")
 
 	go func() {
 		// dont treat shutdown signal as a crash
@@ -29,6 +28,8 @@ func Run(ctx context.Context, cfg *config.Config) error {
 			errChan <- err
 		}
 	}()
+
+	fmt.Println("Running HTTP server...")
 
 	select {
 	case <-ctx.Done():
