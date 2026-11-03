@@ -33,6 +33,7 @@ func Run(ctx context.Context, cfg *config.Config) error {
 
 	select {
 	case <-ctx.Done():
+		fmt.Println("Closing HTTP server...")
 		return srv.Shutdown(context.Background())
 	case err := <-errChan:
 		return err
