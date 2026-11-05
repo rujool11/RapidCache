@@ -1,11 +1,10 @@
 package httpserver
 
 import (
-	"log/slog"
 	"net/http"
 )
 
-func health(w http.ResponseWriter, r *http.Request) {
+func (s *Server) health(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("rapidcache http server is running!"))
-	slog.Debug("GET /health called")
+	s.logger.Debug("GET /health called")
 }

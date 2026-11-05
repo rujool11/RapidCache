@@ -4,6 +4,6 @@ import (
 	"net/http"
 )
 
-func addRoutes(mux *http.ServeMux) {
-	mux.HandleFunc("GET /health", health)
+func (s *Server) addRoutes(mux *http.ServeMux) {
+	mux.HandleFunc("GET /health", s.health)
 }

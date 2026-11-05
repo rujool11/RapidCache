@@ -3,17 +3,34 @@ package httpserver
 import (
 	"context"
 	"fmt"
+	"log/slog"
 	"net/http"
 
 	"github.com/rujool11/RapidCache/internal/config"
 )
 
+type Server struct {
+	cfg    *config.Config
+	logger *slog.Logger
+}
+
 func Run(ctx context.Context, cfg *config.Config) error {
+	logger := slog.With("transport", "http", "port", cfg.HTTPPort)
+
+	srv := &Server{
+		cfg:    cfg,
+		logger: logger,
+	}
+
+	return srv.start(ctx)
+}
+
+func (s *Server) start(ctx context.Context) error {
 	mux := http.NewServeMux()
-	addRoutes(mux)
+	s.addRoutes(mux)
 
 	srv := &http.Server{
-		Addr:    ":" + cfg.HTTPPort,
+		Addr:    ":" + s.cfg.HTTPPort,
 		Handler: mux,
 	}
 

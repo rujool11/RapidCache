@@ -5,17 +5,20 @@ import (
 	"strings"
 )
 
-var router = map[string]handler{
-	"PING": handlePing,
+func (s* Server) getRoutes() map[string]handler{
+	return map[string]handler{
+		"PING": s.handlePing,
+	}
 }
 
-func routeRequest(conn net.Conn, args []string) error {
+func (s *Server) routeRequest(conn net.Conn, args []string) error {
 	command := strings.ToUpper(args[0])
+	routes := s.getRoutes()
 
-	handler, exists := router[command]
+	handler, exists := routes[command]
 	if !exists {
 		// fallback if unkonwn command
-		return handleUnknownCommand(conn, command)
+		return s.handleUnknownCommand(conn, command)
 	}
 
 	return handler(conn, args)

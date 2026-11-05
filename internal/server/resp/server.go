@@ -11,11 +11,26 @@ import (
 	"github.com/rujool11/RapidCache/internal/config"
 )
 
+type Server struct {
+	cfg    *config.Config
+	logger *slog.Logger
+}
+
 func Run(ctx context.Context, cfg *config.Config) error {
+	logger := slog.With("transport", "resp", "port", cfg.RESPPort)
+	srv := &Server{
+		cfg:    cfg,
+		logger: logger,
+	}
+
+	return srv.start(ctx)
+}
+
+func (s *Server) start(ctx context.Context) error {
 	fmt.Println("Running RESP server...")
-	ln, err := net.Listen("tcp", ":"+cfg.RESPPort)
+	ln, err := net.Listen("tcp", ":"+s.cfg.RESPPort)
 	if err != nil {
-		return fmt.Errorf("Error listening on port: %s", cfg.RESPPort)
+		return fmt.Errorf("Error listening on port: %s", s.cfg.RESPPort)
 	}
 	defer ln.Close()
 
@@ -36,11 +51,11 @@ func Run(ctx context.Context, cfg *config.Config) error {
 			}
 		}
 
-		go handleConnection(ctx, conn)
+		go s.handleConnection(ctx, conn)
 	}
 }
 
-func handleConnection(ctx context.Context, conn net.Conn) {
+func (s *Server) handleConnection(ctx context.Context, conn net.Conn) {
 	defer conn.Close() // close connection when session ends
 
 	reader := bufio.NewReader(conn)
@@ -59,10 +74,10 @@ func handleConnection(ctx context.Context, conn net.Conn) {
 			if err == io.EOF {
 				return
 			}
-			slog.Error("Error parsing command", "err", err)
+			s.logger.Error("Error parsing command", "err", err)
 			return
 		}
 
-		routeRequest(conn, args)
+		s.routeRequest(conn, args)
 	}
 }
