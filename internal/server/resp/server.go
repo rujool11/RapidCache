@@ -41,30 +41,28 @@ func Run(ctx context.Context, cfg *config.Config) error {
 }
 
 func handleConnection(ctx context.Context, conn net.Conn) {
-	// stubbed
 	defer conn.Close() // close connection when session ends
 
 	reader := bufio.NewReader(conn)
 
-	select {
-	case <-ctx.Done():
-		return
-	default:
-	}
-
-	// RESP lines end in \r\n
-	_, err := reader.ReadString('\n')
-	if err != nil {
-		// EOF returned when no more input available
-		if err != io.EOF {
-			slog.Error("Error reading byte stream: ", "err", err)
-			return // conn closed
+	for {
+		// check if server is shutting down
+		select {
+		case <-ctx.Done():
+			return
+		default:
 		}
-	}
 
-	// stub PONG
-	_, err = conn.Write([]byte("+PONG\r\n"))
-	if err != nil {
-		slog.Error("Error writing PONG", "err", err)
+		args, err := parseCommand(reader)
+		if err != nil {
+			// returned when no more inputs - graceful connection close
+			if err == io.EOF {
+				return
+			}
+			slog.Error("Error parsing command", "err", err)
+			return
+		}
+
+		routeRequest(conn, args)
 	}
 }

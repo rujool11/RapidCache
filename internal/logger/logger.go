@@ -6,6 +6,7 @@ import (
 	"strings"
 )
 
+// TODO: add server distinction to logging
 func Init(level, format string) {
 
 	var levelValue slog.Level
